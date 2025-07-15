@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Song Registry</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f4f4f4;
+      border-radius: 8px;
+    }
+    h1 {
+      text-align: center;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      background: #fff;
+      margin: 8px 0;
+      padding: 10px;
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+    }
+    button.delete {
+      background: red;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Song Name Registry</h1>
+  <input type="text" id="songInput" placeholder="Enter song name" />
+  <button onclick="addSong()">Add Song</button>
+
+  <ul id="songList"></ul>
+
+  <script>
+    const songInput = document.getElementById('songInput');
+    const songList = document.getElementById('songList');
+
+    let songs = JSON.parse(localStorage.getItem('songs')) || [];
+
+    function renderSongs() {
+      songList.innerHTML = '';
+      songs.forEach((song, index) => {
+        const li = document.createElement('li');
+        li.textContent = song;
+        const delBtn = document.createElement('button');
+        delBtn.textContent = 'Delete';
+        delBtn.className = 'delete';
+        delBtn.onclick = () => {
+          songs.splice(index, 1);
+          saveAndRender();
+        };
+        li.appendChild(delBtn);
+        songList.appendChild(li);
+      });
+    }
+
+    function addSong() {
+      const songName = songInput.value.trim();
+      if (songName) {
+        songs.push(songName);
+        saveAndRender();
+        songInput.value = '';
+      }
+    }
+
+    function saveAndRender() {
+      localStorage.setItem('songs', JSON.stringify(songs));
+      renderSongs();
+    }
+
+    renderSongs();
+  </script>
+
+</body>
+</html>
